@@ -1,4 +1,5 @@
 import './MainMenu.css'
+import accueilImage from '../assets/accueil.jpg'
 
 interface MainMenuProps {
   onPlay: () => void
@@ -8,6 +9,10 @@ interface MainMenuProps {
 export function MainMenu({ onPlay, onCredits }: MainMenuProps) {
   return (
     <div className="main-menu">
+      <div className="menu-background">
+        <img src={accueilImage} alt="Background" className="background-image" />
+        <div className="background-overlay"></div>
+      </div>
       <div className="menu-content">
         <h1 className="game-title">VroumVroum Racing</h1>
         <div className="menu-buttons">
