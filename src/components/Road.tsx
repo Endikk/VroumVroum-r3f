@@ -13,9 +13,10 @@ export function Road({ speed }: RoadProps) {
   // Positions des voies (5 voies de large)
   const lanePositions = [-4, -2, 0, 2, 4]
   
-  // Initialiser les segments de route
+  // Initialiser les segments de route avec une couverture très étendue
   if (roadSegments.current.length === 0) {
-    for (let i = 0; i < 50; i++) {
+    // Créer des segments de -200 à +400 pour couvrir un très large espace
+    for (let i = -50; i < 100; i++) { // -50*4 = -200 à 100*4 = 400
       for (const laneX of lanePositions) {
         roadSegments.current.push({
           x: laneX,
@@ -33,11 +34,11 @@ export function Road({ speed }: RoadProps) {
     })
     
     // Supprimer les segments trop loin devant et en ajouter de nouveaux derrière
-    roadSegments.current = roadSegments.current.filter(segment => segment.z < 220)
+    roadSegments.current = roadSegments.current.filter(segment => segment.z < 500)
     
     // Trouver la position Z la plus en arrière pour chaque voie
     const minZ = Math.min(...roadSegments.current.map(s => s.z))
-    if (minZ > -20) {
+    if (minZ > -100) {
       for (const laneX of lanePositions) {
         roadSegments.current.push({
           x: laneX,

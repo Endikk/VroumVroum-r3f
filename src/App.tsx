@@ -92,8 +92,8 @@ function App() {
     <div className="app">
       <Canvas 
         camera={{ 
-          position: [0, 8, 12], 
-          fov: 75,
+          position: [0, 5, 8], // Position plus proche et plus basse
+          fov: 60, // Champ de vision réduit pour plus de zoom
           near: 0.1,
           far: 1000
         }}
