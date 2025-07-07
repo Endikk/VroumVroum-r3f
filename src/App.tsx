@@ -15,7 +15,8 @@ function RacingGame({ gameLogic }: { gameLogic: ReturnType<typeof useGameLogic> 
   const {
     gameState,
     checkCollision,
-    updatePlayerPosition
+    updatePlayerPosition,
+    updateGame
   } = gameLogic
 
   const { updateCars, removeCar, getCars, resetCars } = useOpponentCars()
@@ -48,25 +49,29 @@ function RacingGame({ gameLogic }: { gameLogic: ReturnType<typeof useGameLogic> 
         />
       ))}
       
-      {/* Mise à jour des voitures adversaires via useFrame */}
-      <CarUpdater 
+      {/* Gestionnaire de mise à jour du jeu */}
+      <GameUpdater 
         updateCars={updateCars}
+        updateGame={updateGame}
         gameState={gameState}
       />
     </>
   )
 }
 
-// Composant helper pour mettre à jour les voitures avec useFrame
-function CarUpdater({ 
+// Composant helper pour mettre à jour le jeu avec useFrame
+function GameUpdater({ 
   updateCars, 
+  updateGame,
   gameState 
 }: { 
   updateCars: (delta: number, gameSpeed: number, difficulty: number) => void
+  updateGame: (delta: number) => void
   gameState: any
 }) {
   useFrame((_, delta) => {
     if (!gameState.isGameOver && !gameState.isPaused) {
+      updateGame(delta)
       updateCars(delta, gameState.speed, gameState.difficulty)
     }
   })

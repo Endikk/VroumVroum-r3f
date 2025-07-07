@@ -7,41 +7,51 @@ interface RoadProps {
 }
 
 export function Road({ speed }: RoadProps) {
-  const roadSegments = useRef<Array<{ z: number; id: number }>>([])
+  const roadSegments = useRef<Array<{ x: number; z: number; id: number }>>([])
   const nextId = useRef(0)
+  
+  // Positions des voies (5 voies de large)
+  const lanePositions = [-4, -2, 0, 2, 4]
   
   // Initialiser les segments de route
   if (roadSegments.current.length === 0) {
     for (let i = 0; i < 50; i++) {
-      roadSegments.current.push({
-        z: i * 4,
-        id: nextId.current++
-      })
+      for (const laneX of lanePositions) {
+        roadSegments.current.push({
+          x: laneX,
+          z: i * 4,
+          id: nextId.current++
+        })
+      }
     }
   }
   
   useFrame((_, delta) => {
-    // Déplacer tous les segments vers l'arrière
+    // Déplacer tous les segments vers l'avant (pour simuler l'avancement du joueur)
     roadSegments.current.forEach(segment => {
-      segment.z -= speed * delta
+      segment.z += speed * delta
     })
     
-    // Supprimer les segments trop loin derrière et en ajouter de nouveaux devant
-    roadSegments.current = roadSegments.current.filter(segment => segment.z > -20)
+    // Supprimer les segments trop loin devant et en ajouter de nouveaux derrière
+    roadSegments.current = roadSegments.current.filter(segment => segment.z < 220)
     
-    const lastSegment = roadSegments.current[roadSegments.current.length - 1]
-    if (lastSegment && lastSegment.z < 200) {
-      roadSegments.current.push({
-        z: lastSegment.z + 4,
-        id: nextId.current++
-      })
+    // Trouver la position Z la plus en arrière pour chaque voie
+    const minZ = Math.min(...roadSegments.current.map(s => s.z))
+    if (minZ > -20) {
+      for (const laneX of lanePositions) {
+        roadSegments.current.push({
+          x: laneX,
+          z: minZ - 4,
+          id: nextId.current++
+        })
+      }
     }
   })
   
   return (
     <group>
       {roadSegments.current.map(segment => (
-        <RoadSegment key={segment.id} position={[0, 0, segment.z]} />
+        <RoadSegment key={segment.id} position={[segment.x, 0, segment.z]} />
       ))}
     </group>
   )

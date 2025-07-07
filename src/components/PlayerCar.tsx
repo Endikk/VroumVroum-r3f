@@ -14,6 +14,10 @@ export function PlayerCar({ position, onPositionChange }: PlayerCarProps) {
   
   const targetX = useRef(position[0])
   const currentX = useRef(position[0])
+  const currentLane = useRef(2) // Commence sur la voie centrale (index 2 = position 0)
+  
+  // Voies disponibles (mêmes que la route)
+  const lanes = [-4, -2, 0, 2, 4]
   
   // Gestion des contrôles clavier
   useEffect(() => {
@@ -22,12 +26,18 @@ export function PlayerCar({ position, onPositionChange }: PlayerCarProps) {
         case 'ArrowLeft':
         case 'a':
         case 'A':
-          targetX.current = Math.max(targetX.current - 2, -4) // Limite gauche
+          if (currentLane.current > 0) {
+            currentLane.current--
+            targetX.current = lanes[currentLane.current]
+          }
           break
         case 'ArrowRight':
         case 'd':
         case 'D':
-          targetX.current = Math.min(targetX.current + 2, 4) // Limite droite
+          if (currentLane.current < lanes.length - 1) {
+            currentLane.current++
+            targetX.current = lanes[currentLane.current]
+          }
           break
       }
     }

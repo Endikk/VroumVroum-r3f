@@ -19,12 +19,12 @@ export function OpponentCar({ position, speed, model, onRemove, onCollision }: O
   
   useFrame((_, delta) => {
     if (carRef.current) {
-      // Mouvement vers l'arrière (vers le joueur)
-      currentPosition.current[2] -= speed * delta
+      // Mouvement vers l'avant (dépassement du joueur)
+      currentPosition.current[2] += speed * delta
       carRef.current.position.set(...currentPosition.current)
       
-      // Supprimer la voiture si elle est trop loin derrière
-      if (currentPosition.current[2] < -20) {
+      // Supprimer la voiture si elle est trop loin devant
+      if (currentPosition.current[2] > 100) {
         onRemove()
       }
       
@@ -37,7 +37,7 @@ export function OpponentCar({ position, speed, model, onRemove, onCollision }: O
 
   return (
     <group ref={carRef} position={position}>
-      <primitive object={scene.clone()} scale={0.8} rotation={[0, Math.PI, 0]} />
+      <primitive object={scene.clone()} scale={0.8} rotation={[0, 0, 0]} />
     </group>
   )
 }
@@ -63,13 +63,13 @@ export function useOpponentCars() {
   ], [])
   
   const spawnCar = (gameSpeed: number, difficulty: number) => {
-    const lanes = [-4, -2, 0, 2, 4] // 5 voies
+    const lanes = [-4, -2, 0, 2, 4] // 5 voies correspondant à la route
     const randomLane = lanes[Math.floor(Math.random() * lanes.length)]
     const randomModel = carModels[Math.floor(Math.random() * carModels.length)]
     
     cars.current.push({
       id: nextId.current++,
-      position: [randomLane, 0.1, 50],
+      position: [randomLane, 0.1, -50], // Spawn derrière le joueur
       speed: gameSpeed + Math.random() * 5 + difficulty,
       model: randomModel
     })

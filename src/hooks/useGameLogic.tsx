@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
 
 interface GameState {
   score: number
@@ -41,8 +40,8 @@ export function useGameLogic() {
     playerPosition.current.x = x
   }, [])
   
-  // Update du jeu
-  useFrame((_, delta) => {
+  // Update du jeu (sera appelé depuis un composant à l'intérieur du Canvas)
+  const updateGame = useCallback((delta: number) => {
     if (gameState.isGameOver || gameState.isPaused) return
     
     gameTime.current += delta
@@ -61,7 +60,7 @@ export function useGameLogic() {
         distance: newDistance
       }
     })
-  })
+  }, [gameState.isGameOver, gameState.isPaused])
   
   // Contrôles du jeu
   const restart = useCallback(() => {
@@ -89,6 +88,7 @@ export function useGameLogic() {
     gameState,
     checkCollision,
     updatePlayerPosition,
+    updateGame,
     restart,
     pause,
     resume
