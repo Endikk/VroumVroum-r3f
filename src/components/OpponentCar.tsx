@@ -71,7 +71,7 @@ export function useOpponentCars() {
     cars.current.push({
       id: nextId.current++,
       position: [randomLane, 0.1, -50], // Spawn derrière le joueur
-      speed: gameSpeed + Math.random() * 5 + difficulty,
+      speed: gameSpeed + Math.random() * 8 + difficulty * 2,
       model: randomModel
     })
   }
@@ -79,8 +79,8 @@ export function useOpponentCars() {
   const updateCars = (delta: number, gameSpeed: number, difficulty: number) => {
     spawnTimer.current += delta
     
-    // Fréquence de spawn basée sur la difficulté
-    const spawnFrequency = Math.max(0.5 - difficulty * 0.05, 0.2)
+    // Fréquence de spawn basée sur la difficulté (plus agressive)
+    const spawnFrequency = Math.max(0.5 - difficulty * 0.1, 0.15)
     
     if (spawnTimer.current > spawnFrequency) {
       spawnCar(gameSpeed, difficulty)

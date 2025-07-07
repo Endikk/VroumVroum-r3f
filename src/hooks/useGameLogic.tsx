@@ -52,8 +52,8 @@ export function useGameLogic() {
     setGameState(prev => {
       const newDistance = prev.distance + prev.speed * delta
       const newScore = Math.floor(newDistance / 10) // 1 point tous les 10 mètres
-      const newDifficulty = Math.floor(newDistance / 500) // Difficulté augmente tous les 500m
-      const newSpeed = 15 + newDifficulty * 2 // Vitesse augmente avec la difficulté
+      const newDifficulty = Math.floor(newDistance / 200) // Difficulté augmente tous les 200m (plus rapide)
+      const newSpeed = 15 + newDifficulty * 4 // Vitesse augmente plus rapidement avec la difficulté
       
       return {
         ...prev,
