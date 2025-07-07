@@ -10,6 +10,8 @@ import { SimpleRoad } from './components/SimpleRoad'
 import { GameUI } from './components/GameUI'
 import { MainMenu } from './components/MainMenu'
 import { Credits } from './components/Credits'
+import { Sun } from './components/Sun'
+import { Sky } from './components/Sky'
 import { useGameLogic } from './hooks/useGameLogic'
 
 // Composant principal du jeu (uniquement les éléments 3D)
@@ -31,6 +33,12 @@ function RacingGame({ gameLogic }: { gameLogic: ReturnType<typeof useGameLogic> 
 
   return (
     <>
+      {/* Ciel avec dégradé */}
+      <Sky />
+      
+      {/* Soleil dans le ciel */}
+      <Sun />
+      
       {/* Route optimisée */}
       <SimpleRoad speed={gameState.speed} />
       
@@ -118,19 +126,13 @@ function App() {
           near: 0.1,
           far: 1000
         }}
+        shadows={true} // Activation des ombres
       >
         <Suspense fallback={null}>
-          {/* Éclairage optimisé */}
-          <ambientLight intensity={0.6} />
-          <directionalLight 
-            position={[5, 10, 5]} 
-            intensity={1}
-            castShadow
-            shadow-mapSize={[1024, 1024]}
-          />
-          <directionalLight position={[-5, 5, -5]} intensity={0.3} />
+          {/* Éclairage ambiant doux */}
+          <ambientLight intensity={0.4} color="#FFE4B5" />
           
-          {/* Environnement */}
+          {/* Environnement avec preset sunset pour harmonie avec le soleil */}
           <Environment preset="sunset" />
           
           {/* Jeu principal */}

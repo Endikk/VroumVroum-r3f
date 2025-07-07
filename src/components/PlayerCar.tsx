@@ -1,7 +1,18 @@
 import { useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
-import { Group, Box3 } from 'three'
+import { Group, Box3, Object3D, Mesh } from 'three'
+
+// Fonction utilitaire pour activer les ombres récursivement
+function enableShadows(object: Object3D) {
+  object.traverse((child) => {
+    if ((child as Mesh).isMesh) {
+      const mesh = child as Mesh
+      mesh.castShadow = true
+      mesh.receiveShadow = true
+    }
+  })
+}
 
 interface PlayerCarProps {
   position: [number, number, number]
@@ -22,6 +33,13 @@ export function PlayerCar({ position, onPositionChange, onCollisionBoxUpdate }: 
   
   // Boîte de collision pour le joueur
   const collisionBox = useRef(new Box3())
+  
+  // Activer les ombres sur le modèle lors du chargement
+  useEffect(() => {
+    if (scene) {
+      enableShadows(scene)
+    }
+  }, [scene])
   
   // Gestion des contrôles clavier
   useEffect(() => {
@@ -75,6 +93,13 @@ export function PlayerCar({ position, onPositionChange, onCollisionBoxUpdate }: 
       }
     }
   })
+
+  // Activer les ombres sur le modèle chargé
+  useEffect(() => {
+    if (scene) {
+      enableShadows(scene)
+    }
+  }, [scene])
 
   return (
     <group ref={carRef} position={position}>

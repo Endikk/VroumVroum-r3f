@@ -1,7 +1,18 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
-import { Group, Box3 } from 'three'
+import { Group, Box3, Object3D, Mesh } from 'three'
+
+// Fonction utilitaire pour activer les ombres récursivement
+function enableShadows(object: Object3D) {
+  object.traverse((child) => {
+    if ((child as Mesh).isMesh) {
+      const mesh = child as Mesh
+      mesh.castShadow = true
+      mesh.receiveShadow = true
+    }
+  })
+}
 
 interface OpponentCarProps {
   position: [number, number, number]
@@ -17,6 +28,19 @@ export function OpponentCar({ position, speed, model, onRemove, onCollision }: O
   
   const currentPosition = useRef(position)
   const collisionBox = useRef(new Box3())
+  
+  // Activer les ombres sur le modèle lors du chargement
+  useEffect(() => {
+    if (scene) {
+      enableShadows(scene)
+    }
+  }, [scene])
+  
+  useEffect(() => {
+    if (carRef.current) {
+      enableShadows(carRef.current)
+    }
+  }, [scene])
   
   useFrame((_, delta) => {
     if (carRef.current) {

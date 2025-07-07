@@ -96,7 +96,13 @@ function RoadDecorations() {
   return (
     <group>
       {decorations.map(item => (
-        <mesh key={item.key} position={item.position} scale={item.scale}>
+        <mesh 
+          key={item.key} 
+          position={item.position} 
+          scale={item.scale}
+          castShadow={true}
+          receiveShadow={true}
+        >
           <coneGeometry args={[1, 2, 6]} />
           <meshLambertMaterial color={item.color} />
         </mesh>
