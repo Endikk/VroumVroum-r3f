@@ -13,7 +13,7 @@ export function Credits({ onBack }: CreditsProps) {
         <div className="credits-sections">
           <div className="credits-section">
             <h2>Développement</h2>
-            <p>Votre Nom</p>
+            <p>LUCAS LE BG</p>
             <p>Cours CESI - MAALSI</p>
             <p>Three.js & React Three Fiber</p>
           </div>
@@ -38,9 +38,9 @@ export function Credits({ onBack }: CreditsProps) {
           
           <div className="credits-section">
             <h2>Remerciements</h2>
-            <p>Merci à la communauté Three.js</p>
-            <p>Merci aux contributeurs de R3F</p>
-            <p>Cours CESI pour l'inspiration</p>
+            <p>Merci à la communauté a PACO pour la photo</p>
+            <p>Merci au prof</p>
+            <p>Merci maman</p>
           </div>
         </div>
         

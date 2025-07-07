@@ -16,30 +16,31 @@
 .credits-content {
   text-align: center;
   color: white;
-  max-width: 800px;
-  padding: 2rem;
+  max-width: 1000px;
+  padding: 4rem 3rem;
   margin: 2rem;
+  transform: scale(1.4);
 }
 
 .credits-title {
-  font-size: 3rem;
+  font-size: 5rem;
   font-weight: bold;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   color: #ecf0f1;
 }
 
 .credits-sections {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+  margin-bottom: 4rem;
 }
 
 .credits-section {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 2.5rem;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: transform 0.3s ease;
@@ -51,17 +52,18 @@
 }
 
 .credits-section h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
   color: #3498db;
   border-bottom: 2px solid #3498db;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.8rem;
 }
 
 .credits-section p {
-  margin: 0.5rem 0;
+  margin: 0.8rem 0;
   color: #bdc3c7;
   line-height: 1.5;
+  font-size: 1.1rem;
 }
 
 .credits-section ul {
@@ -71,10 +73,11 @@
 }
 
 .credits-section li {
-  margin: 0.5rem 0;
+  margin: 0.8rem 0;
   color: #bdc3c7;
   position: relative;
-  padding-left: 1.5rem;
+  padding-left: 2rem;
+  font-size: 1.1rem;
 }
 
 .credits-section li::before {
@@ -88,9 +91,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
+  gap: 1.2rem;
+  padding: 1.5rem 3rem;
+  font-size: 1.4rem;
   font-weight: 600;
   border: none;
   border-radius: 12px;
@@ -111,7 +114,7 @@
 }
 
 .button-icon {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
 }
 
 @keyframes slideIn {
