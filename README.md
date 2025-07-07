@@ -3,6 +3,27 @@
 ## Description
 VroumVroum-r3f is a 3D racing game built using React, TypeScript, and Three.js. The project leverages Vite for fast development and includes a variety of assets and components to create an engaging gaming experience.
 
+## 🚀 GitHub Pages Deployment
+
+This project is configured to deploy automatically to GitHub Pages. 
+
+### Automatic Deployment
+- Every push to the `main` branch triggers an automatic deployment
+- The site will be available at: `https://yourusername.github.io/VroumVroum-r3f/`
+
+### Manual Deployment
+To deploy manually, you can also use:
+```bash
+npm run deploy
+```
+
+### Setup Instructions for GitHub Pages
+1. Go to your repository settings on GitHub
+2. Navigate to "Pages" in the sidebar
+3. Under "Source", select "GitHub Actions"
+4. Push your changes to the `main` branch
+5. The deployment will start automatically
+
 ## Features
 - **React + TypeScript**: Modern web development with type safety.
 - **Three.js**: 3D rendering for immersive gameplay.
