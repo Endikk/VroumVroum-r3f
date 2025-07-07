@@ -1,0 +1,179 @@
+.app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
+}
+
+/* Interface utilisateur du jeu */
+.game-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.game-hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.score-display, .speed-display {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #FFD700;
+}
+
+.speed-display {
+  background: rgba(220, 20, 60, 0.8);
+  border-color: #FF4500;
+  font-size: 14px;
+}
+
+.controls-info {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  max-width: 280px;
+  border: 2px solid #4169E1;
+}
+
+.race-info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 100, 0, 0.8);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  min-width: 200px;
+  border: 2px solid #32CD32;
+}
+
+.race-info h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #FFD700;
+}
+
+.race-info div {
+  margin-bottom: 5px;
+}
+
+.controls-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #FFD700;
+}
+
+.controls-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.controls-info li {
+  margin-bottom: 5px;
+}
+
+/* Menu de pause */
+.pause-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  pointer-events: auto;
+  border: 3px solid #FFD700;
+}
+
+.pause-menu h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: #FFD700;
+}
+
+.pause-menu button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  margin: 5px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+  border: 2px solid transparent;
+}
+
+.pause-menu button:hover {
+  background: #45a049;
+  border-color: #FFD700;
+}
+
+/* Effets spéciaux pour le thème Formula1 */
+.game-hud::before {
+  content: "🏎️";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  font-size: 20px;
+  z-index: -1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.game-ui {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.speed-display {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls-info, .race-info {
+    font-size: 12px;
+    padding: 10px;
+  }
+  
+  .score-display, .speed-display {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
