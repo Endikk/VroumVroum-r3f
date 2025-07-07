@@ -20,9 +20,9 @@ Un simulateur de course de Formule 1 réaliste construit avec React Three Fiber,
 - **Système DRS/Boost** avec Shift
 
 ### 🎮 Contrôles Avancés
-- **W/↑** : Accélération
+- **Z/↑** : Accélération
 - **S/↓** : Freinage/Marche arrière
-- **A/←** : Braquage gauche
+- **Q/←** : Braquage gauche
 - **D/→** : Braquage droite
 - **SPACE** : Freinage d'urgence
 - **SHIFT** : DRS/Mode Boost

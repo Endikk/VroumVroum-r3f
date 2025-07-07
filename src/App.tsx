@@ -1,146 +1,112 @@
 import { Canvas } from '@react-three/fiber'
 import { Environment } from '@react-three/drei'
-import { Suspense, useState, useRef, useEffect } from 'react'
+import { Suspense } from 'react'
 import './App.css'
-import GameScene from './components/GameScene'
-import ProfessionalGameUI from './components/ProfessionalGameUI'
 
-function App() {
-  const [currentSpeed, setCurrentSpeed] = useState(0)
-  const [lapCount, setLapCount] = useState(0)
-  const [isOffTrack, setIsOffTrack] = useState(false)
-  const [bestLapTime, setBestLapTime] = useState<number | undefined>()
-  const [currentLapTime, setCurrentLapTime] = useState<number | undefined>()
-  const [collisionCount, setCollisionCount] = useState(0)
-  const [rpm] = useState(0)
-  const [gear] = useState(1)
-  const [enginePower] = useState(0)
-  const lapStartTime = useRef<number>(Date.now())
+// Composants du jeu
+import { PlayerCar } from './components/PlayerCar'
+import { OpponentCar, useOpponentCars } from './components/OpponentCar'
+import { Road } from './components/Road'
+import { GameUI } from './components/GameUI'
+import { useGameLogic } from './hooks/useGameLogic'
 
-  const handleLapComplete = (newLapCount: number) => {
-    const lapEndTime = Date.now()
-    const lapTimeInSeconds = (lapEndTime - lapStartTime.current) / 1000
-    
-    // Mettre à jour le meilleur temps si c'est le premier tour ou si c'est mieux
-    if (!bestLapTime || lapTimeInSeconds < bestLapTime) {
-      setBestLapTime(lapTimeInSeconds)
-    }
-    
-    // Redémarrer le chrono pour le prochain tour
-    lapStartTime.current = lapEndTime
-    setCurrentLapTime(0)
-    setLapCount(newLapCount)
+// Composant principal du jeu
+function RacingGame() {
+  const {
+    gameState,
+    checkCollision,
+    updatePlayerPosition,
+    restart,
+    pause,
+    resume
+  } = useGameLogic()
+
+  const { updateCars, removeCar, getCars } = useOpponentCars(
+    gameState.speed,
+    gameState.difficulty
+  )
+
+  // Mise à jour des voitures adversaires
+  if (!gameState.isGameOver && !gameState.isPaused) {
+    updateCars(0.016) // Approximation du deltaTime
   }
-
-  const handleCollision = (collisionType: 'wall' | 'barrier', force: number) => {
-    setCollisionCount(prev => prev + 1)
-    console.log(`🚗💥 Collision avec ${collisionType} ! Force: ${force.toFixed(2)}`)
-    
-    // Vous pouvez ajouter des effets sonores ou visuels ici
-    // Par exemple: jouer un son de collision
-  }
-
-  // Mettre à jour le temps de tour actuel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (lapCount > 0 || currentSpeed > 5) { // Commencer à chronométrer quand on bouge
-        const currentTime = (Date.now() - lapStartTime.current) / 1000
-        setCurrentLapTime(currentTime)
-      }
-    }, 100)
-
-    return () => clearInterval(interval)
-  }, [lapCount, currentSpeed])
 
   return (
+    <>
+      {/* Route */}
+      <Road speed={gameState.speed} />
+      
+      {/* Voiture du joueur */}
+      <PlayerCar 
+        position={[0, 0.1, 0]} 
+        onPositionChange={updatePlayerPosition}
+      />
+      
+      {/* Voitures adversaires */}
+      {getCars().map(car => (
+        <OpponentCar
+          key={car.id}
+          position={car.position}
+          speed={car.speed}
+          model={car.model}
+          onRemove={() => removeCar(car.id)}
+          onCollision={checkCollision}
+        />
+      ))}
+      
+      {/* Interface utilisateur */}
+      <GameUI
+        gameState={gameState}
+        onRestart={restart}
+        onPause={pause}
+        onResume={resume}
+      />
+    </>
+  )
+}
+
+function App() {
+  return (
     <div className="app">
-      <Canvas
+      <Canvas 
         camera={{ 
-          position: [0, 4, 10], 
-          fov: 75
+          position: [0, 8, 12], 
+          fov: 75,
+          near: 0.1,
+          far: 1000
         }}
-        shadows
-        gl={{ antialias: true, alpha: false }}
       >
         <Suspense fallback={null}>
-          {/* Éclairage professionnel pour circuit F1 */}
-          <ambientLight intensity={0.4} color="#f0f8ff" />
-          
-          {/* Soleil principal */}
-          <directionalLight
-            position={[50, 50, 25]}
-            intensity={1.5}
+          {/* Éclairage optimisé */}
+          <ambientLight intensity={0.6} />
+          <directionalLight 
+            position={[5, 10, 5]} 
+            intensity={1}
             castShadow
-            shadow-mapSize={[4096, 4096]}
-            shadow-camera-left={-100}
-            shadow-camera-right={100}
-            shadow-camera-top={100}
-            shadow-camera-bottom={-100}
-            shadow-camera-near={0.1}
-            shadow-camera-far={200}
-            color="#ffffff"
+            shadow-mapSize={[1024, 1024]}
           />
+          <directionalLight position={[-5, 5, -5]} intensity={0.3} />
           
-          {/* Éclairage d'appoint pour les virages */}
-          <spotLight 
-            position={[0, 20, 100]} 
-            intensity={0.8} 
-            angle={Math.PI / 4}
-            penumbra={0.5}
-            castShadow
-            color="#ffeb3b"
-          />
-          <spotLight 
-            position={[-50, 20, 150]} 
-            intensity={0.8} 
-            angle={Math.PI / 4}
-            penumbra={0.5}
-            castShadow
-            color="#ffeb3b"
-          />
+          {/* Environnement */}
+          <Environment preset="sunset" />
           
-          {/* Éclairage pour l'épingle */}
-          <pointLight position={[-90, 15, 150]} intensity={1.2} color="#ff9800" />
+          {/* Jeu principal */}
+          <RacingGame />
           
-          {/* Éclairage du pont */}
-          <pointLight position={[0, 15, 200]} intensity={1.0} color="#2196f3" />
-          
-          {/* Environnement réaliste */}
-          <Environment 
-            preset="city"
-            background
-            blur={0.8}
-          />
-          
-          {/* Brouillard pour la profondeur */}
-          <fog attach="fog" args={['#87CEEB', 100, 300]} />
-          
-          {/* Scène avec le circuit */}
-          <GameScene 
-            onSpeedChange={setCurrentSpeed}
-            onLapComplete={handleLapComplete}
-            onOffTrack={setIsOffTrack}
-            onCollision={handleCollision}
-          />
+          {/* Contrôles de caméra (optionnel pour le debug) */}
+          {/* <OrbitControls 
+            enablePan={false}
+            enableZoom={true}
+            enableRotate={true}
+            minDistance={5}
+            maxDistance={50}
+            maxPolarAngle={Math.PI / 2}
+          /> */}
         </Suspense>
       </Canvas>
-      
-      {/* Interface utilisateur avec informations de course complètes */}
-      <ProfessionalGameUI 
-        speed={currentSpeed}
-        lapCount={lapCount}
-        isOffTrack={isOffTrack}
-        bestLapTime={bestLapTime}
-        currentLapTime={currentLapTime}
-        collisionCount={collisionCount}
-        rpm={rpm}
-        gear={gear}
-        enginePower={enginePower}
-        position={1}
-        totalRacers={1}
-      />
     </div>
   )
 }
 
 export default App
+
