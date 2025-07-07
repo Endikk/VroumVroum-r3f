@@ -1,14 +1,14 @@
 import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
-import { Group } from 'three'
+import { Group, Box3 } from 'three'
 
 interface OpponentCarProps {
   position: [number, number, number]
   speed: number
   model: string
   onRemove: () => void
-  onCollision: (carPosition: [number, number, number]) => void
+  onCollision: (carPosition: [number, number, number], collisionBox?: Box3) => void
 }
 
 export function OpponentCar({ position, speed, model, onRemove, onCollision }: OpponentCarProps) {
@@ -16,6 +16,7 @@ export function OpponentCar({ position, speed, model, onRemove, onCollision }: O
   const { scene } = useGLTF(`/model/Toy Car/Models/GLB format/${model}.glb`)
   
   const currentPosition = useRef(position)
+  const collisionBox = useRef(new Box3())
   
   useFrame((_, delta) => {
     if (carRef.current) {
@@ -23,14 +24,18 @@ export function OpponentCar({ position, speed, model, onRemove, onCollision }: O
       currentPosition.current[2] += speed * delta
       carRef.current.position.set(...currentPosition.current)
       
+      // Calculer la boîte de collision en temps réel
+      collisionBox.current.setFromObject(carRef.current)
+      
       // Supprimer la voiture si elle est trop loin devant
       if (currentPosition.current[2] > 100) {
         onRemove()
       }
       
       // Vérifier collision avec le joueur (position approximative du joueur: z=0)
-      if (currentPosition.current[2] <= 2 && currentPosition.current[2] >= -2) {
-        onCollision(currentPosition.current)
+      // Zone de collision étendue pour capturer le joueur même en mouvement
+      if (currentPosition.current[2] <= 3 && currentPosition.current[2] >= -3) {
+        onCollision(currentPosition.current, collisionBox.current)
       }
     }
   })

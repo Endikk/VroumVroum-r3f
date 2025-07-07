@@ -1,14 +1,15 @@
 import { useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
-import { Group } from 'three'
+import { Group, Box3 } from 'three'
 
 interface PlayerCarProps {
   position: [number, number, number]
-  onPositionChange: (x: number) => void
+  onPositionChange: (x: number, z: number) => void
+  onCollisionBoxUpdate?: (box: Box3) => void // Pour debugging
 }
 
-export function PlayerCar({ position, onPositionChange }: PlayerCarProps) {
+export function PlayerCar({ position, onPositionChange, onCollisionBoxUpdate }: PlayerCarProps) {
   const carRef = useRef<Group>(null)
   const { scene } = useGLTF('/model/Toy Car/Models/GLB format/vehicle-racer.glb')
   
@@ -16,8 +17,11 @@ export function PlayerCar({ position, onPositionChange }: PlayerCarProps) {
   const currentX = useRef(position[0])
   const currentLane = useRef(2) // Commence sur la voie centrale (index 2 = position 0)
   
-  // Voies disponibles (mêmes que la route)
-  const lanes = [-4, -2, 0, 2, 4]
+  // Voies disponibles (alignées avec OpponentCar)
+  const lanes = [-4.8, -2.4, 0, 2.4, 4.8]
+  
+  // Boîte de collision pour le joueur
+  const collisionBox = useRef(new Box3())
   
   // Gestion des contrôles clavier
   useEffect(() => {
@@ -62,7 +66,13 @@ export function PlayerCar({ position, onPositionChange }: PlayerCarProps) {
       carRef.current.rotation.z = rotationAngle
       
       // Callback pour la gestion des collisions
-      onPositionChange(currentX.current)
+      onPositionChange(currentX.current, position[2])
+      
+      // Mise à jour de la boîte de collision (pour debug)
+      collisionBox.current.setFromObject(carRef.current)
+      if (onCollisionBoxUpdate) {
+        onCollisionBoxUpdate(collisionBox.current)
+      }
     }
   })
 

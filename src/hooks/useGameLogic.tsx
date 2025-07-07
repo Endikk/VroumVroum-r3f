@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
+import { Box3 } from 'three'
 
 type AppState = 'menu' | 'playing' | 'credits'
 
@@ -23,24 +24,46 @@ export function useGameLogic() {
   })
   
   const playerPosition = useRef({ x: 0, z: 0 })
+  const playerCollisionBox = useRef<Box3 | null>(null)
   const gameTime = useRef(0)
   
-  // Fonction de collision
-  const checkCollision = useCallback((carPosition: [number, number, number]) => {
+  // Fonction de collision améliorée avec detection plus précise
+  const checkCollision = useCallback((carPosition: [number, number, number], opponentBox?: Box3) => {
     const dx = Math.abs(carPosition[0] - playerPosition.current.x)
     const dz = Math.abs(carPosition[2] - playerPosition.current.z)
     
-    // Collision si les voitures sont très proches
-    if (dx < 1.5 && dz < 2) {
-      setGameState(prev => ({ ...prev, isGameOver: true }))
-      return true
+    // Si nous avons des boîtes de collision réelles, les utiliser
+    if (playerCollisionBox.current && opponentBox) {
+      const collisionDetected = playerCollisionBox.current.intersectsBox(opponentBox)
+      if (collisionDetected) {
+        setGameState(prev => ({ ...prev, isGameOver: true }))
+        return true
+      }
+    } else {
+      // Fallback vers la détection simple mais plus précise
+      const carWidth = 1.0   // Largeur d'une voiture (réduite pour être plus strict)
+      const carLength = 2.0  // Longueur d'une voiture (réduite pour être plus strict)
+      
+      // Collision si les boîtes de collision se chevauchent
+      const collisionDetected = dx < carWidth && dz < carLength
+      
+      if (collisionDetected) {
+        setGameState(prev => ({ ...prev, isGameOver: true }))
+        return true
+      }
     }
     return false
   }, [])
   
-  // Mise à jour de la position du joueur
-  const updatePlayerPosition = useCallback((x: number) => {
+  // Mise à jour de la position du joueur (x et z)
+  const updatePlayerPosition = useCallback((x: number, z: number) => {
     playerPosition.current.x = x
+    playerPosition.current.z = z
+  }, [])
+  
+  // Mise à jour de la boîte de collision du joueur
+  const updatePlayerCollisionBox = useCallback((box: Box3) => {
+    playerCollisionBox.current = box.clone()
   }, [])
   
   // Update du jeu (sera appelé depuis un composant à l'intérieur du Canvas)
@@ -106,6 +129,7 @@ export function useGameLogic() {
     gameState,
     checkCollision,
     updatePlayerPosition,
+    updatePlayerCollisionBox,
     updateGame,
     restart,
     pause,

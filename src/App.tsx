@@ -18,6 +18,7 @@ function RacingGame({ gameLogic }: { gameLogic: ReturnType<typeof useGameLogic> 
     gameState,
     checkCollision,
     updatePlayerPosition,
+    updatePlayerCollisionBox,
     updateGame
   } = gameLogic
 
@@ -37,6 +38,7 @@ function RacingGame({ gameLogic }: { gameLogic: ReturnType<typeof useGameLogic> 
       <PlayerCar 
         position={[0, 0.1, 0]} 
         onPositionChange={updatePlayerPosition}
+        onCollisionBoxUpdate={updatePlayerCollisionBox}
       />
       
       {/* Voitures adversaires */}
