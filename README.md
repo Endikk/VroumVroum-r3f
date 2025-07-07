@@ -1,69 +1,74 @@
-# React + TypeScript + Vite
+# VroumVroum-r3f
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+VroumVroum-r3f is a 3D racing game built using React, TypeScript, and Three.js. The project leverages Vite for fast development and includes a variety of assets and components to create an engaging gaming experience.
 
-Currently, two official plugins are available:
+## Features
+- **React + TypeScript**: Modern web development with type safety.
+- **Three.js**: 3D rendering for immersive gameplay.
+- **Vite**: Fast development server and build tool.
+- **Custom Components**: Includes components for player and opponent cars, roads, and game UI.
+- **Reusable Assets**: A rich collection of 3D models and textures for tracks, items, and more.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure
+```
+public/
+  model/
+    Toy Car/
+      Models/
+      Previews/
+src/
+  assets/
+  components/
+  hooks/
+  types/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
+- Node.js (>= 16.x)
+- npm or yarn
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd VroumVroum-r3f
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+### Running the Development Server
+Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
 ```
+
+### Building for Production
+Build the project for production:
+```bash
+npm run build
+# or
+yarn build
+```
+
+### Previewing the Production Build
+Preview the production build locally:
+```bash
+npm run preview
+# or
+yarn preview
+```
+
+## License
+This project uses assets from the Toy Car model pack by Kenney. Refer to the `License.txt` file in the `public/model/Toy Car` directory for more details.
