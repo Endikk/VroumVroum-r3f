@@ -1,5 +1,7 @@
 import { useState, useCallback, useRef } from 'react'
 
+type AppState = 'menu' | 'playing' | 'credits'
+
 interface GameState {
   score: number
   speed: number
@@ -10,6 +12,7 @@ interface GameState {
 }
 
 export function useGameLogic() {
+  const [appState, setAppState] = useState<AppState>('menu')
   const [gameState, setGameState] = useState<GameState>({
     score: 0,
     speed: 15,
@@ -83,14 +86,32 @@ export function useGameLogic() {
   const resume = useCallback(() => {
     setGameState(prev => ({ ...prev, isPaused: false }))
   }, [])
-  
+
+  // Navigation du menu
+  const startGame = useCallback(() => {
+    setAppState('playing')
+    restart()
+  }, [])
+
+  const showCredits = useCallback(() => {
+    setAppState('credits')
+  }, [])
+
+  const backToMenu = useCallback(() => {
+    setAppState('menu')
+  }, [])
+
   return {
+    appState,
     gameState,
     checkCollision,
     updatePlayerPosition,
     updateGame,
     restart,
     pause,
-    resume
+    resume,
+    startGame,
+    showCredits,
+    backToMenu
   }
 }

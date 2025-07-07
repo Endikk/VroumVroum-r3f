@@ -104,7 +104,8 @@
 }
 
 .start-button,
-.restart-button {
+.restart-button,
+.menu-button {
   background: linear-gradient(145deg, #00aa00, #00ff00);
   border: none;
   color: black;
@@ -113,9 +114,14 @@
   font-weight: bold;
   border-radius: 10px;
   cursor: pointer;
-  margin-top: 20px;
+  margin: 10px;
   transition: all 0.3s;
   pointer-events: all;
+}
+
+.menu-button {
+  background: linear-gradient(145deg, #4a90e2, #357abd);
+  color: white;
 }
 
 .start-button:hover,
@@ -123,6 +129,12 @@
   background: linear-gradient(145deg, #00ff00, #44ff44);
   transform: scale(1.05);
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.menu-button:hover {
+  background: linear-gradient(145deg, #5ba0f2, #4a90e2);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
 }
 
 .pause-panel h2,

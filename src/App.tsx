@@ -6,8 +6,10 @@ import './App.css'
 // Composants du jeu
 import { PlayerCar } from './components/PlayerCar'
 import { OpponentCar, useOpponentCars } from './components/OpponentCar'
-import { Road } from './components/Road'
+import { SimpleRoad } from './components/SimpleRoad'
 import { GameUI } from './components/GameUI'
+import { MainMenu } from './components/MainMenu'
+import { Credits } from './components/Credits'
 import { useGameLogic } from './hooks/useGameLogic'
 
 // Composant principal du jeu (uniquement les éléments 3D)
@@ -28,8 +30,8 @@ function RacingGame({ gameLogic }: { gameLogic: ReturnType<typeof useGameLogic> 
 
   return (
     <>
-      {/* Route */}
-      <Road speed={gameState.speed} />
+      {/* Route optimisée */}
+      <SimpleRoad speed={gameState.speed} />
       
       {/* Voiture du joueur */}
       <PlayerCar 
@@ -88,6 +90,23 @@ function useSharedGameState() {
 function App() {
   const gameLogic = useSharedGameState()
 
+  // Rendu conditionnel basé sur l'état de l'application
+  if (gameLogic.appState === 'menu') {
+    return (
+      <MainMenu 
+        onPlay={gameLogic.startGame}
+        onCredits={gameLogic.showCredits}
+      />
+    )
+  }
+
+  if (gameLogic.appState === 'credits') {
+    return (
+      <Credits onBack={gameLogic.backToMenu} />
+    )
+  }
+
+  // État 'playing' - Affichage du jeu complet
   return (
     <div className="app">
       <Canvas 
@@ -123,6 +142,7 @@ function App() {
         onRestart={gameLogic.restart}
         onPause={gameLogic.pause}
         onResume={gameLogic.resume}
+        onBackToMenu={gameLogic.backToMenu}
       />
     </div>
   )

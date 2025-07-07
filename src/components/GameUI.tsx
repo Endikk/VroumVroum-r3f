@@ -14,9 +14,10 @@ interface GameUIProps {
   onRestart: () => void
   onPause: () => void
   onResume: () => void
+  onBackToMenu: () => void
 }
 
-export function GameUI({ gameState, onRestart, onPause, onResume }: GameUIProps) {
+export function GameUI({ gameState, onRestart, onPause, onResume, onBackToMenu }: GameUIProps) {
   const [showInstructions, setShowInstructions] = useState(true)
   
   useEffect(() => {
@@ -123,6 +124,12 @@ export function GameUI({ gameState, onRestart, onPause, onResume }: GameUIProps)
               onClick={onRestart}
             >
               Appuyez sur R pour rejouer
+            </button>
+            <button 
+              className="menu-button"
+              onClick={onBackToMenu}
+            >
+              Retour au menu
             </button>
           </div>
         </div>

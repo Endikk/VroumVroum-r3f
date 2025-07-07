@@ -37,7 +37,7 @@ export function OpponentCar({ position, speed, model, onRemove, onCollision }: O
 
   return (
     <group ref={carRef} position={position}>
-      <primitive object={scene.clone()} scale={0.8} rotation={[0, 0, 0]} />
+      <primitive object={scene.clone()} scale={0.8} rotation={[0, Math.PI, 0]} />
     </group>
   )
 }
@@ -63,7 +63,8 @@ export function useOpponentCars() {
   ], [])
   
   const spawnCar = (gameSpeed: number, difficulty: number) => {
-    const lanes = [-4, -2, 0, 2, 4] // 5 voies correspondant à la route
+    // Nouvelles positions des voies pour correspondre à SimpleRoad
+    const lanes = [-4.8, -2.4, 0, 2.4, 4.8] // 5 voies espacées de 2.4 unités
     const randomLane = lanes[Math.floor(Math.random() * lanes.length)]
     const randomModel = carModels[Math.floor(Math.random() * carModels.length)]
     
