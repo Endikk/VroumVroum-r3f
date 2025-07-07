@@ -1,4 +1,4 @@
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment } from '@react-three/drei'
 import { Suspense } from 'react'
 import './App.css'
@@ -10,25 +10,19 @@ import { Road } from './components/Road'
 import { GameUI } from './components/GameUI'
 import { useGameLogic } from './hooks/useGameLogic'
 
-// Composant principal du jeu
-function RacingGame() {
+// Composant principal du jeu (uniquement les éléments 3D)
+function RacingGame({ gameLogic }: { gameLogic: ReturnType<typeof useGameLogic> }) {
   const {
     gameState,
     checkCollision,
-    updatePlayerPosition,
-    restart,
-    pause,
-    resume
-  } = useGameLogic()
+    updatePlayerPosition
+  } = gameLogic
 
-  const { updateCars, removeCar, getCars } = useOpponentCars(
-    gameState.speed,
-    gameState.difficulty
-  )
+  const { updateCars, removeCar, getCars, resetCars } = useOpponentCars()
 
-  // Mise à jour des voitures adversaires
-  if (!gameState.isGameOver && !gameState.isPaused) {
-    updateCars(0.016) // Approximation du deltaTime
+  // Réinitialiser les voitures quand le jeu redémarre
+  if (gameState.score === 0 && gameState.distance === 0) {
+    resetCars()
   }
 
   return (
@@ -54,18 +48,41 @@ function RacingGame() {
         />
       ))}
       
-      {/* Interface utilisateur */}
-      <GameUI
+      {/* Mise à jour des voitures adversaires via useFrame */}
+      <CarUpdater 
+        updateCars={updateCars}
         gameState={gameState}
-        onRestart={restart}
-        onPause={pause}
-        onResume={resume}
       />
     </>
   )
 }
 
+// Composant helper pour mettre à jour les voitures avec useFrame
+function CarUpdater({ 
+  updateCars, 
+  gameState 
+}: { 
+  updateCars: (delta: number, gameSpeed: number, difficulty: number) => void
+  gameState: any
+}) {
+  useFrame((_, delta) => {
+    if (!gameState.isGameOver && !gameState.isPaused) {
+      updateCars(delta, gameState.speed, gameState.difficulty)
+    }
+  })
+  
+  return null
+}
+
+// Hook pour partager l'état du jeu entre les composants
+function useSharedGameState() {
+  const gameLogic = useGameLogic()
+  return gameLogic
+}
+
 function App() {
+  const gameLogic = useSharedGameState()
+
   return (
     <div className="app">
       <Canvas 
@@ -91,19 +108,17 @@ function App() {
           <Environment preset="sunset" />
           
           {/* Jeu principal */}
-          <RacingGame />
-          
-          {/* Contrôles de caméra (optionnel pour le debug) */}
-          {/* <OrbitControls 
-            enablePan={false}
-            enableZoom={true}
-            enableRotate={true}
-            minDistance={5}
-            maxDistance={50}
-            maxPolarAngle={Math.PI / 2}
-          /> */}
+          <RacingGame gameLogic={gameLogic} />
         </Suspense>
       </Canvas>
+      
+      {/* Interface utilisateur (hors du Canvas) */}
+      <GameUI
+        gameState={gameLogic.gameState}
+        onRestart={gameLogic.restart}
+        onPause={gameLogic.pause}
+        onResume={gameLogic.resume}
+      />
     </div>
   )
 }
